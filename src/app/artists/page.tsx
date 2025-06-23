@@ -1,0 +1,28 @@
+"use client";
+import artists from "@/data/artists.json";
+import { useState } from "react";
+import ArtistCard from "@/components/ArtistCard";
+import FilterPanel from "@/components/FilterPanel";
+
+export default function ArtistListing() {
+  const [filters, setFilters] = useState({ category: "", location: "", price: "" });
+
+  const filteredArtists = artists.filter((artist) => {
+    return (
+      (!filters.category || artist.category === filters.category) &&
+      (!filters.location || artist.location.includes(filters.location)) &&
+      (!filters.price || artist.priceRange === filters.price)
+    );
+  });
+
+  return (
+    <div className="p-6">
+      <FilterPanel filters={filters} setFilters={setFilters} />
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4">
+        {filteredArtists.map((artist) => (
+          <ArtistCard key={artist.name} artist={artist} />
+        ))}
+      </div>
+    </div>
+  );
+}
