@@ -18,7 +18,7 @@ export default function HomePage() {
         transition={{ duration: 0.8 }}
         className="bg-gray-700 p-10 text-center text-white"
       >
-        <h1 className="text-4xl font-bold">Welcome to Artistly.com</h1>
+        <h1 className="text-4xl font-bold">Welcome to Artistly</h1>
         <p className="mt-4 text-lg">Book top artists for your events</p>
       </motion.section>
 

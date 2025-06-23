@@ -1,6 +1,6 @@
 "use client";
 
-import { useForm, Controller } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import { useState } from "react";
@@ -25,8 +25,6 @@ export default function OnboardPage() {
   const {
     register,
     handleSubmit,
-    control,
-    watch,
     reset,
     formState: { errors },
   } = useForm({
@@ -37,7 +35,18 @@ export default function OnboardPage() {
     },
   });
 
-const onSubmit = (data: any) => {
+  type ArtistFormData = {
+  name: string;
+  bio: string;
+  category: string[];
+  languages: string[];
+  fee: string;
+  location: string;
+  profileImage?: FileList;
+  image?: string;
+};
+
+const onSubmit = (data: ArtistFormData ) => {
   const artist = { ...data, image: imageBase64 };
   const existing = JSON.parse(localStorage.getItem("artistSubmissions") || "[]");
   const updated = [...existing, artist];
@@ -51,8 +60,8 @@ const onSubmit = (data: any) => {
 
 const [imageBase64, setImageBase64] = useState<string | null>(null);
 
-const handleImageChange = (e: any) => {
-  const file = e.target.files[0];
+const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const file = e.target.files?.[0];
   if (file) {
     const reader = new FileReader();
     reader.onloadend = () => {
@@ -61,6 +70,7 @@ const handleImageChange = (e: any) => {
     reader.readAsDataURL(file);
   }
 };
+
 
 
   return (
