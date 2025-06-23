@@ -16,9 +16,9 @@ export default function ArtistListing() {
   });
 
   return (
-    <div className="p-6">
+    <div className="p-6 text-blue-900">
       <FilterPanel filters={filters} setFilters={setFilters} />
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4">
+      <div className="grid grid-cols-1 text-emerald-600 md:grid-cols-3 gap-4 mt-4">
         {filteredArtists.map((artist) => (
           <ArtistCard key={artist.name} artist={artist} />
         ))}
