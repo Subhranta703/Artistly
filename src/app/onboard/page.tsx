@@ -1,10 +1,11 @@
 "use client";
 
+import Image from "next/image";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import { useState } from "react";
-import React from "react";
+import type { Resolver } from "react-hook-form";
 
 const categories = ["Singer", "Dancer", "DJ", "Speaker"];
 const languages = ["English", "Hindi", "Punjabi", "Tamil", "Bengali"];
@@ -17,7 +18,11 @@ const schema = yup.object().shape({
   languages: yup.array().min(1, "Select at least one language"),
   fee: yup.string().required("Fee range is required"),
   location: yup.string().required("Location is required"),
-  profileImage: yup.mixed().notRequired(),
+  profileImage: yup
+    .mixed()
+    .test("file", "Invalid file", () => true)
+    .nullable()
+    .notRequired(),
 });
 
 type ArtistFormData = {
@@ -40,7 +45,7 @@ export default function OnboardPage() {
     reset,
     formState: { errors },
   } = useForm<ArtistFormData>({
-    resolver: yupResolver(schema),
+    resolver: yupResolver(schema) as Resolver<ArtistFormData>,
     defaultValues: {
       category: [],
       languages: [],
@@ -87,7 +92,7 @@ export default function OnboardPage() {
           {errors.bio && <p className="text-red-400 text-sm">{errors.bio.message}</p>}
         </div>
 
-        {/* Category Multi-select */}
+        {/* Category */}
         <div>
           <label>Category</label>
           <div className="flex flex-wrap gap-2">
@@ -101,7 +106,7 @@ export default function OnboardPage() {
           {errors.category && <p className="text-red-400 text-sm">{errors.category.message}</p>}
         </div>
 
-        {/* Languages Multi-select */}
+        {/* Languages */}
         <div>
           <label>Languages Spoken</label>
           <div className="flex flex-wrap gap-2">
@@ -115,7 +120,7 @@ export default function OnboardPage() {
           {errors.languages && <p className="text-red-400 text-sm">{errors.languages.message}</p>}
         </div>
 
-        {/* Fee Range */}
+        {/* Fee */}
         <div>
           <label>Fee Range</label>
           <select {...register("fee")} className="w-full border rounded p-2 text-black">
@@ -147,15 +152,18 @@ export default function OnboardPage() {
             className="text-white"
           />
           {imageBase64 && (
-            <img
+            <Image
               src={imageBase64}
               alt="Preview"
+              width={100}
+              height={100}
+              unoptimized
               className="w-24 h-24 rounded mt-2 object-cover border"
             />
           )}
         </div>
 
-        {/* Submit Button */}
+        {/* Submit */}
         <button
           type="submit"
           className="w-full bg-blue-600 text-white p-2 rounded hover:bg-blue-700"
