@@ -1,29 +1,31 @@
 "use client";
+
+import { useSearchParams } from "next/navigation";
 import artists from "@/data/artists.json";
-import { useState } from "react";
 import ArtistCard from "@/components/ArtistCard";
-import FilterPanel from "@/components/FilterPanel";
+import { useEffect, useState } from "react";
 
 export default function ArtistListing() {
-  const [filters, setFilters] = useState({ category: "", location: "", price: "" });
+  const params = useSearchParams();
+  const selectedCategory = params.get("category");
+  const [filteredArtists, setFilteredArtists] = useState(artists);
 
-const filteredArtists = artists.filter((artist) => {
+  useEffect(() => {
+    if (selectedCategory) {
+      setFilteredArtists(
+        artists.filter((a) => a.category.includes(selectedCategory))
+      );
+    } else {
+      setFilteredArtists(artists);
+    }
+  }, [selectedCategory]);
+
   return (
-    (!filters.category || artist.category.includes(filters.category)) &&
-    (!filters.location || artist.location.includes(filters.location)) &&
-    (!filters.price || artist.fee === filters.price)
-  );
-});
-
-
-  return (
-    <div className="p-6 text-blue-900">
-      <FilterPanel
-        filters={filters}
-        onChange={(field, value) => setFilters((prev) => ({ ...prev, [field]: value }))}
-      />
-
-      <div className="grid grid-cols-1 text-emerald-600 md:grid-cols-3 gap-4 mt-4">
+    <div className="p-6">
+      <h1 className="text-2xl font-semibold mb-4 text-blue-600">
+        Explore {selectedCategory || "All"} Artists
+      </h1>
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         {filteredArtists.map((artist) => (
           <ArtistCard key={artist.name} artist={artist} />
         ))}
